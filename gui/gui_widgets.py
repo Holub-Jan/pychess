@@ -79,6 +79,7 @@ class GuiTile(GuiWidget):
         self._layout = QVBoxLayout()
         self._piece_widget = QWidget()
         self._selected = False
+        self._index = GuiTile.__index
         # render content
         self._render()
         # update counter of instances
@@ -112,7 +113,6 @@ class GuiTile(GuiWidget):
         self._selected = value
         self._refresh()
 
-    @staticmethod
-    def _get_background():
-        i = 0 if int(GuiTile.__index / 8) % 2 == 0 else 1
-        return 'white' if GuiTile.__index % 2 == i else 'grey'
+    def _get_background(self):
+        i = 0 if int(self._index / 8) % 2 == 0 else 1
+        return 'white' if self._index % 2 == i else 'grey'
