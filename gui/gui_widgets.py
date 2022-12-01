@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from typing import Callable
 
 from PyQt5.QtCore import Qt
@@ -5,7 +6,23 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
 
 
-class GuiLabel(QWidget):
+class GuiWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    @abstractmethod
+    def _render(self):
+        pass
+
+    def _refresh(self):
+        self.setStyleSheet(self._get_stylesheet())
+
+    @abstractmethod
+    def _get_stylesheet(self) -> str:
+        pass
+
+
+class GuiLabel(GuiWidget):
     def __init__(self, text):
         super().__init__()
         self._text = text
@@ -15,16 +32,19 @@ class GuiLabel(QWidget):
         # render content
         self._render()
 
+    def _get_stylesheet(self):
+        return 'background-color: rgba(0,0,0); color: white;'
+
     def _render(self):
         self._label.setAlignment(Qt.AlignCenter)
         self._layout.setContentsMargins(0, 0, 0, 0)
         self._layout.setSpacing(0)
         self._layout.addWidget(self._label)
-        self.setStyleSheet('background-color: rgba(0,0,0); color: white;')
         self.setLayout(self._layout)
+        self._refresh()
 
 
-class GuiPiece(QWidget):
+class GuiPiece(GuiWidget):
     def __init__(self, img_name):
         super().__init__()
         self._img_name = img_name
@@ -43,8 +63,11 @@ class GuiPiece(QWidget):
         self._layout.addWidget(self._label)
         self.setLayout(self._layout)
 
+    def _get_stylesheet(self) -> str:
+        return ''
 
-class GuiTile(QWidget):
+
+class GuiTile(GuiWidget):
 
     __index = 0
 
@@ -55,6 +78,7 @@ class GuiTile(QWidget):
         # create layout and widgets
         self._layout = QVBoxLayout()
         self._piece_widget = QWidget()
+        self._selected = False
         # render content
         self._render()
         # update counter of instances
@@ -62,14 +86,17 @@ class GuiTile(QWidget):
         # register event
         self.mouseReleaseEvent = lambda event: on_click(self.x, self.y)
 
+    def _get_stylesheet(self) -> str:
+        return f"background-color: {self._get_background()}; " \
+               f"border: {'2px solid #F00' if self._selected else '1px solid #000'};"
+
     def _render(self):
         self._layout.setContentsMargins(0, 0, 0, 0)
         self._layout.setSpacing(0)
         self._layout.addWidget(self._piece_widget)
-        self.setStyleSheet(f"background-color: {self._get_background()}; "
-                           f"border: 1px solid #000;")
         self.setFixedSize(64, 64)
         self.setLayout(self._layout)
+        self._refresh()
 
     def set_piece(self, piece: GuiPiece):
         self._layout.removeWidget(self._piece_widget)
@@ -80,6 +107,10 @@ class GuiTile(QWidget):
         self._layout.removeWidget(self._piece_widget)
         self._piece_widget = QWidget()
         self._layout.addWidget(self._piece_widget)
+
+    def set_selected(self, value: bool):
+        self._selected = value
+        self._refresh()
 
     @staticmethod
     def _get_background():

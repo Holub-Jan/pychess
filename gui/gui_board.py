@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QMainWindow
 
-from gui.gui_widgets import GuiTile, GuiLabel
+from gui.gui_widgets import GuiTile, GuiLabel, GuiWidget
 from model.enums import PieceColor
 from model.pieces import Pawn
 
 
-class GuiChessBoard(QWidget):
+class GuiChessBoard(GuiWidget):
     axis_x = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     axis_y = range(8, 0, -1)
 
@@ -19,6 +19,9 @@ class GuiChessBoard(QWidget):
         self._layout = QGridLayout()
         # render content
         self._render()
+
+    def _get_stylesheet(self) -> str:
+        return ''
 
     def _render(self):
         self._layout.setContentsMargins(0, 0, 0, 0)
@@ -42,6 +45,8 @@ class GuiChessBoard(QWidget):
         for i in range(len(self.axis_x)):
             tile = self._chess_tiles[1][i]
             tile.clear()
+            if i % 4 == 0:
+                tile.set_selected(True)
             w_pawn = Pawn(PieceColor.WHITE)
             tile.set_piece(w_pawn.gui())
         for i in range(len(self.axis_x)):
