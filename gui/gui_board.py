@@ -6,6 +6,7 @@ from model.pieces import Pawn, Rook, Knight, Bishop, Queen, King
 from game.logic import Logic
 
 
+
 class GuiChessBoard(GuiWidget):
     axis_x = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     axis_y = range(8, 0, -1)
