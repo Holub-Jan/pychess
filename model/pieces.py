@@ -27,27 +27,43 @@ class Pawn(APiece):
     def moves(self):
         return ["A3", "A4"]
 
+
 class Rook(APiece):
     def __init__(self, color: PieceColor):
         super().__init__(color, PieceType.ROOK)
+
+    def moves(self):
+        return ["A3", "A4"]
 
 
 class Knight(APiece):
     def __init__(self, color: PieceColor):
         super().__init__(color, PieceType.KNIGHT)
 
+    def moves(self):
+        return ["A3", "A4"]
+
 
 class Bishop(APiece):
     def __init__(self, color: PieceColor):
         super().__init__(color, PieceType.BISHOP)
+
+    def moves(self):
+        return ["A3", "A4"]
 
 
 class Queen(APiece):
     def __init__(self, color: PieceColor):
         super().__init__(color, PieceType.QUEEN)
 
+    def moves(self):
+        return ["A3", "A4"]
+
 
 class King(APiece):
     def __init__(self, color: PieceColor):
         super().__init__(color, PieceType.KING)
+
+    def moves(self):
+        return ["A3", "A4"]
 
