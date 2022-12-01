@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QMainWindow
 
 from gui.gui_widgets import GuiTile, GuiLabel
+from game.logic import Logic
 from model.enums import PieceColor
 from model.pieces import Pawn, Rook, Knight, Bishop, Queen, King
 
@@ -13,6 +14,7 @@ class GuiChessBoard(QWidget):
     def __init__(self):
         super().__init__()
         # init chess tiles
+        self.logic = Logic(len(self.axis_y), len(self.axis_y))
         self._chess_tiles = [
             [GuiTile(x, y, self.tile_clicked) for x in range(len(self.axis_x))]
             for y in range(len(self.axis_y))]
@@ -34,101 +36,112 @@ class GuiChessBoard(QWidget):
             self._layout.addWidget(GuiLabel(self.axis_x[i]), label_x_row, i + 1)
         self.setLayout(self._layout)
 
-    def tile_clicked(self, x, y):
-        print(f"You clicked on tile {self.axis_x[x]}{self.axis_y[y]}")
-
     # Example of game init
     def init_game(self):
-        self.init_pieces_set()
+        self._load_board()
 
-    def init_pieces_set(self):
-        self.init_piece_set_pawns()
-        self.init_piece_set_rooks()
-        self.init_piece_set_knights()
-        self.init_piece_set_bishops()
-        self.init_piece_set_royal()
+    def _load_board(self):
+        piece_list = self.logic.get_piece_list()
 
-    def init_piece_set_pawns(self):
-        # White
-        for i in range(len(self.axis_x)):
-            tile = self._chess_tiles[6][i]
-            tile.clear()
-            w_pawn = Pawn(PieceColor.WHITE)
-            tile.set_piece(w_pawn.gui())
-        # Black
-        for i in range(len(self.axis_x)):
-            tile = self._chess_tiles[1][i]
-            tile.clear()
-            b_pawn = Pawn(PieceColor.BLACK)
-            tile.set_piece(b_pawn.gui())
+        for x in range(len(self.axis_x)):
+            for y in range(len(self.axis_y)):
+                tile = self._chess_tiles[x][y]
 
-    def init_piece_set_rooks(self):
-        # White
-        for i in [0, 7]:
-            tile = self._chess_tiles[7][i]
-            tile.clear()
-            w_rook = Rook(PieceColor.WHITE)
-            tile.set_piece(w_rook.gui())
+                if (x, y) not in piece_list:
+                    tile.clear()
+                else:
+                    piece_type = piece_list[x, y]['type']
+                    piece_color = piece_list[x, y]['color']
 
-        # Black
-        for i in [0, 7]:
-            tile = self._chess_tiles[0][i]
-            tile.clear()
-            b_rook = Rook(PieceColor.BLACK)
-            tile.set_piece(b_rook.gui())
+                    self._load_by_type(x, y, piece_type, piece_color)
 
-    def init_piece_set_knights(self):
-        # White
-        for i in [1, 6]:
-            tile = self._chess_tiles[7][i]
-            tile.clear()
-            w_knight = Knight(PieceColor.WHITE)
-            tile.set_piece(w_knight.gui())
+    def _load_by_type(self, x, y, piece_type, piece_color):
+        if piece_type == 'pawn':
+            self._set_pawn(x, y, piece_color)
 
-        # Black
-        for i in [1, 6]:
-            tile = self._chess_tiles[0][i]
-            tile.clear()
-            b_knight = Knight(PieceColor.BLACK)
-            tile.set_piece(b_knight.gui())
+        elif piece_type == 'rook':
+            self._set_rook(x, y, piece_color)
 
-    def init_piece_set_bishops(self):
-        # White
-        for i in [2, 5]:
-            tile = self._chess_tiles[7][i]
-            tile.clear()
-            w_bishop = Bishop(PieceColor.WHITE)
-            tile.set_piece(w_bishop.gui())
+        elif piece_type == 'knight':
+            self._set_knight(x, y, piece_color)
 
-        # Black
-        for i in [2, 5]:
-            tile = self._chess_tiles[0][i]
-            tile.clear()
-            b_bishop = Bishop(PieceColor.BLACK)
-            tile.set_piece(b_bishop.gui())
+        elif piece_type == 'bishop':
+            self._set_bishop(x, y, piece_color)
 
-    def init_piece_set_royal(self):
-        # White
-        tile = self._chess_tiles[7][3]
+        elif piece_type == 'queen':
+            self._set_queen(x, y, piece_color)
+
+        elif piece_type == 'king':
+            self._set_king(x, y, piece_color)
+
+    def _set_pawn(self, x, y, color):
+        tile = self._chess_tiles[x][y]
         tile.clear()
-        w_queen = Queen(PieceColor.WHITE)
-        tile.set_piece(w_queen.gui())
 
-        tile = self._chess_tiles[7][4]
-        tile.clear()
-        w_king = King(PieceColor.WHITE)
-        tile.set_piece(w_king.gui())
+        if color == 'white':
+            pawn = Pawn(PieceColor.WHITE)
+        else:
+            pawn = Pawn(PieceColor.BLACK)
 
-        # Black
-        tile = self._chess_tiles[0][3]
-        tile.clear()
-        b_queen = Queen(PieceColor.BLACK)
-        tile.set_piece(b_queen.gui())
+        tile.set_piece(pawn.gui())
 
-        tile = self._chess_tiles[0][4]
+    def _set_rook(self, x, y, color):
+        tile = self._chess_tiles[x][y]
         tile.clear()
-        b_king = King(PieceColor.BLACK)
-        tile.set_piece(b_king.gui())
+
+        if color == 'white':
+            rook = Rook(PieceColor.WHITE)
+        else:
+            rook = Rook(PieceColor.BLACK)
+
+        tile.set_piece(rook.gui())
+
+    def _set_knight(self, x, y, color):
+        tile = self._chess_tiles[x][y]
+        tile.clear()
+
+        if color == 'white':
+            knight = Knight(PieceColor.WHITE)
+        else:
+            knight = Knight(PieceColor.BLACK)
+
+        tile.set_piece(knight.gui())
+
+    def _set_bishop(self, x, y, color):
+        tile = self._chess_tiles[x][y]
+        tile.clear()
+
+        if color == 'white':
+            bishop = Bishop(PieceColor.WHITE)
+        else:
+            bishop = Bishop(PieceColor.BLACK)
+
+        tile.set_piece(bishop.gui())
+
+    def _set_queen(self, x, y, color):
+        tile = self._chess_tiles[x][y]
+        tile.clear()
+
+        if color == 'white':
+            queen = Queen(PieceColor.WHITE)
+        else:
+            queen = Queen(PieceColor.BLACK)
+
+        tile.set_piece(queen.gui())
+
+    def _set_king(self, x, y, color):
+        tile = self._chess_tiles[x][y]
+        tile.clear()
+
+        if color == 'white':
+            king = King(PieceColor.WHITE)
+        else:
+            king = King(PieceColor.BLACK)
+
+        tile.set_piece(king.gui())
+
+    def tile_clicked(self, x, y):
+        print(f"You clicked on tile {self.axis_x[x]}{self.axis_y[y]}")
 
 
 class ChessGUI(QMainWindow):
