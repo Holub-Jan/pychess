@@ -10,6 +10,7 @@ class Logic:
         self.piece_list = list()
 
         self._init_field_gen()
+        self._selected_pos = tuple()
 
     def _init_field_gen(self):
         for row in range(self.len_x):
@@ -45,8 +46,20 @@ class Logic:
     def get_piece_list(self):
         return self.piece_list
 
-    def move_piece(self, from_pos, to_pos):
-        piece = self.piece_list[from_pos]
-        self.piece_list.pop(from_pos)
-        print(piece)
-        self.piece_list[to_pos] = piece
+    def move_piece(self, y, x):
+        if self._selected_pos == ():
+            if not self._tile_empty(x, y):
+                self._selected_pos = (x, y)
+
+        elif self._selected_pos != (x, y):
+            select_x = self._selected_pos[0]
+            select_y = self._selected_pos[1]
+
+            self.piece_list[x][y] = self.piece_list[select_x][select_y]
+            self.piece_list[select_x][select_y] = False
+            self._selected_pos = tuple()
+
+    def _tile_empty(self, x, y):
+        if not self.piece_list[x][y]:
+            return True
+        return False

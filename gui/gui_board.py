@@ -1,10 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QMainWindow
 
 from gui.gui_widgets import GuiTile, GuiLabel, GuiWidget
-from model.enums import PieceColor
-from model.pieces import Pawn, Rook, Knight, Bishop, Queen, King
 from game.logic import Logic
-
 
 
 class GuiChessBoard(GuiWidget):
@@ -59,13 +56,9 @@ class GuiChessBoard(GuiWidget):
                     tile.set_piece(piece.gui())
 
     def tile_clicked(self, x, y):
-        print(x, y)
-        if self.from_pos == ():
-            self.from_pos = (x, y)
-        elif self.from_pos != (x, y):
-            self.logic.move_piece(self.from_pos, (x, y))
-            self.from_pos = tuple()
+        self.logic.move_piece(x, y)
         print(f"You clicked on tile {self.axis_x[x]}{self.axis_y[y]}")
+        self.init_game()
         
 
 class ChessGUI(QMainWindow):
