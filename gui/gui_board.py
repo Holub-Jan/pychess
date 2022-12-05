@@ -12,7 +12,7 @@ class GuiChessBoard(GuiWidget):
     def __init__(self):
         super().__init__()
         # init chess tiles
-        self.logic = Logic(len(self.axis_y), len(self.axis_y))
+        self.logic = Logic(len(self.axis_x), len(self.axis_y))
         self._chess_tiles = [
             [GuiTile(x, y, self.tile_clicked) for x in range(len(self.axis_x))]
             for y in range(len(self.axis_y))]
@@ -52,13 +52,12 @@ class GuiChessBoard(GuiWidget):
                 tile.clear()
                 if piece_list[x][y]:
                     piece = piece_list[x][y]
-                    tile.clear()
                     tile.set_piece(piece.gui())
 
     def tile_clicked(self, x, y):
         self.logic.move_piece(x, y)
         print(f"You clicked on tile {self.axis_x[x]}{self.axis_y[y]}")
-        self.init_game()
+        self.init_game() # temporary
         
 
 class ChessGUI(QMainWindow):
