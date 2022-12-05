@@ -3,9 +3,9 @@ from model.pieces import Rook, Knight, Bishop, Queen, King, Pawn
 
 
 class Logic:
-    def __init__(self, len_x, len_y):
-        self.len_x = len_x
-        self.len_y = len_y
+    def __init__(self):
+        self.len_x = 8
+        self.len_y = 8
 
         self.piece_list = list()
         self.taken_pieces = list()

@@ -9,10 +9,10 @@ class GuiChessBoard(GuiWidget):
     axis_y = range(8, 0, -1)
 
     # TODO
-    def __init__(self):
+    def __init__(self, logic):
         super().__init__()
         # init chess tiles
-        self.logic = Logic(len(self.axis_x), len(self.axis_y))
+        self.logic = logic
         self._chess_tiles = [
             [GuiTile(x, y, self.tile_clicked) for x in range(len(self.axis_x))]
             for y in range(len(self.axis_y))]
@@ -64,7 +64,8 @@ class ChessGUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.chess_board = GuiChessBoard()
+        self. logic = Logic()
+        self.chess_board = GuiChessBoard(self.logic)
         self.setWindowTitle("PyChess")
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
