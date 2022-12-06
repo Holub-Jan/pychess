@@ -1,5 +1,6 @@
 from model.enums import PieceColor
 from model.pieces import Rook, Knight, Bishop, Queen, King, Pawn
+from game.rule_manager import RuleManager
 
 
 class Logic:
@@ -12,6 +13,9 @@ class Logic:
 
         self._init_field_gen()
         self._selected_pos = tuple()
+        self._legal_moves = list()
+
+        self.rule_manager = RuleManager(self.piece_list)
 
     def _init_field_gen(self):
 
@@ -66,19 +70,23 @@ class Logic:
 
     # TODO : flipped by 90 clockwise,idk
     def move_piece(self, y, x):
-        print(x, y, self.piece_list[x][y])
         if self._selected_pos == ():
             if not self._tile_empty(x, y):
                 self._selected_pos = (x, y)
+                self._legal_moves = self.rule_manager.legal_moves(self.piece_list[x][y], x, y)
 
-        elif self._selected_pos != (x, y):
+                if not self._legal_moves:
+                    self._selected_pos = tuple()
+                print(self._legal_moves)
+
+        elif (x, y) in self._legal_moves:
             select_x = self._selected_pos[0]
             select_y = self._selected_pos[1]
 
             self.piece_list[x][y] = self.piece_list[select_x][select_y]
-            print(self.piece_list[select_x][select_y].moves(select_x, select_y))
             self.piece_list[select_x][select_y] = False
             self._selected_pos = tuple()
+            self._legal_moves = list()
 
     def _tile_empty(self, x, y):
         if not self.piece_list[x][y]:
