@@ -249,41 +249,54 @@ class RuleManager:
 
         return left + right + top + bot + top_left + top_right + bot_right + bot_left
 
-    # TODO : cognitive complexity high
     def _king_moves(self, x, y):
         move_list = list()
 
-        if x > 0:
-            if y > 0 and self.board[x - 1][y - 1].color != self.color:
-                # Top left
-                move_list.append((x - 1, y - 1))
-
-            if self.board[x - 1][y].color != self.color:
-                # Left
-                move_list.append((x - 1, y))
-
-            if y < 7 and self.board[x - 1][y + 1].color != self.color:
-                # Top right
-                move_list.append((x - 1, y + 1))
-
-        if y < 7 and self.board[x][y + 1].color != self.color:
+        if y < 7 and (not self.board[x][y + 1] or self.board[x][y + 1].color != self.color):
             # Right
             move_list.append((x, y + 1))
 
-        if y > 0 and self.board[x][y - 1].color != self.color:
+        if y > 0 and (not self.board[x][y - 1] or self.board[x][y - 1].color != self.color):
             # Left
             move_list.append((x, y - 1))
 
+        return self._get_king_top(x, y) + move_list + self._get_king_bot(x ,y)
+
+    def _get_king_top(self, x, y):
+        move_list = list()
+
+        if x > 0:
+            if y > 0 and (not self.board[x - 1][y - 1] or self.board[x - 1][y - 1].color != self.color):
+                # Top left
+                move_list.append((x - 1, y - 1))
+
+            if not self.board[x - 1][y] or self.board[x - 1][y].color != self.color:
+                # Top
+                move_list.append((x - 1, y))
+
+            if y < 7 and (not self.board[x - 1][y + 1] or self.board[x - 1][y + 1].color != self.color):
+                # Top right
+                move_list.append((x - 1, y + 1))
+
+        return move_list
+
+    def _get_king_bot(self, x, y):
+        move_list = list()
+        #print('bot')
+
         if x < 7:
-            if y > 0 and self.board[x + 1][y - 1].color != self.color:
+            if y > 0 and (not self.board[x + 1][y - 1] or self.board[x + 1][y - 1].color != self.color):
+                #print('botleft')
                 # Bottom left
                 move_list.append((x + 1, y - 1))
 
-            if self.board[x + 1][y].color != self.color:
+            if not self.board[x + 1][y] or self.board[x + 1][y].color != self.color:
+                #print('botbot')
                 # Bottom
                 move_list.append((x + 1, y))
 
-            if y < 7 and self.board[x + 1][y + 1].color != self.color:
+            if y < 7 and (not self.board[x + 1][y + 1] or self.board[x + 1][y + 1].color != self.color):
+                #print('botright')
                 # Bottom right
                 move_list.append((x + 1, y + 1))
 
