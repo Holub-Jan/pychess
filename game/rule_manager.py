@@ -57,14 +57,14 @@ class RuleManager:
         return move_list
 
     def _rook_moves(self, x, y):
-        left = self._get_left(x, y)
-        right = self._get_right(x, y)
-        top = self._get_top(x, y)
-        bot = self._get_bot(x, y)
+        left = self._get_just_top(x, y)
+        right = self._get_just_bot(x, y)
+        top = self._get_just_left(x, y)
+        bot = self._get_just_right(x, y)
 
         return left + right + top + bot
 
-    def _get_left(self, x, y):
+    def _get_just_top(self, x, y):
         lst = list()
 
         x -= 1
@@ -72,13 +72,12 @@ class RuleManager:
             lst.append((x, y))
             x -= 1
 
-        if x > -1:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if x >= 0 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
-    def _get_right(self, x, y):
+    def _get_just_bot(self, x, y):
         lst = list()
 
         x += 1
@@ -86,13 +85,12 @@ class RuleManager:
             lst.append((x, y))
             x += 1
 
-        if x < 8:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if x <= 7 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
-    def _get_bot(self, x, y):
+    def _get_just_right(self, x, y):
         lst = list()
 
         y += 1
@@ -100,13 +98,12 @@ class RuleManager:
             lst.append((x, y))
             y += 1
 
-        if y < 8:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if y <= 7 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
-    def _get_top(self, x, y):
+    def _get_just_left(self, x, y):
         lst = list()
 
         y -= 1
@@ -114,9 +111,8 @@ class RuleManager:
             lst.append((x, y))
             y -= 1
 
-        if y > - 1:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if y >= 0 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
@@ -142,7 +138,7 @@ class RuleManager:
         if x < 7:
             if y < 6 and (not self.board[x + 1][y + 2] or self.board[x + 1][y + 2].color != self.color):
                 lst.append((x + 1, y + 2))
-            if y > 1 and (not self.board[x - 1][y - 2] or self.board[x - 1][y - 2].color != self.color):
+            if y > 1 and (not self.board[x - 1][y - 2] or self.board[x + 1][y - 2].color != self.color):
                 lst.append((x + 1, y - 2))
         return lst
 
@@ -182,9 +178,8 @@ class RuleManager:
             x -= 1
             y -= 1
 
-        if y >= 0 and x >= 0:
-            if not self.board[x][y] and self.board[x][y].color == self.color:
-                lst.append((x, y))
+        if y >= 0 and x >= 0 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
@@ -198,9 +193,8 @@ class RuleManager:
             x -= 1
             y += 1
 
-        if x >= 0 and y <= 7:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if x >= 0 and y <= 7 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
@@ -214,9 +208,8 @@ class RuleManager:
             x += 1
             y += 1
 
-        if x <= 7 and y <= 7:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if x <= 7 and y <= 7 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
@@ -230,9 +223,8 @@ class RuleManager:
             x += 1
             y -= 1
 
-        if x <= 7 and y >= 0:
-            if not self.board[x][y] and self.board[x][y].color != self.color:
-                lst.append((x, y))
+        if x <= 7 and y >= 0 and self.board[x][y].color != self.color:
+            lst.append((x, y))
 
         return lst
 
@@ -242,10 +234,10 @@ class RuleManager:
         bot_left = self._get_bottom_left(x, y)
         bot_right = self._get_bottom_right(x, y)
 
-        left = self._get_left(x, y)
-        right = self._get_right(x, y)
-        top = self._get_top(x, y)
-        bot = self._get_bot(x, y)
+        left = self._get_just_top(x, y)
+        right = self._get_just_bot(x, y)
+        top = self._get_just_left(x, y)
+        bot = self._get_just_right(x, y)
 
         return left + right + top + bot + top_left + top_right + bot_right + bot_left
 
