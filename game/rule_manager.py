@@ -67,48 +67,56 @@ class RuleManager:
     def _get_left(self, x, y):
         lst = list()
 
-        while x != 0 and not self.board[x][y]:
-            lst.append((x - 1, y))
+        x -= 1
+        while x >= 0 and not self.board[x][y]:
+            lst.append((x, y))
             x -= 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if x > -1:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
     def _get_right(self, x, y):
         lst = list()
 
-        while x != 7 and not self.board[x][y]:
-            lst.append((x + 1, y))
+        x += 1
+        while x <= 7 and not self.board[x][y]:
+            lst.append((x, y))
             x += 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if x < 8:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
     def _get_bot(self, x, y):
         lst = list()
 
-        while y != 7 and not self.board[x][y]:
-            lst.append((x, y + 1))
+        y += 1
+        while y <= 7 and not self.board[x][y]:
+            lst.append((x, y))
             y += 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if y < 8:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
     def _get_top(self, x, y):
         lst = list()
 
-        while y != 0 and not self.board[x][y]:
-            lst.append((x, y - 1))
+        y -= 1
+        while y >= 0 and not self.board[x][y]:
+            lst.append((x, y))
             y -= 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if y > - 1:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
@@ -171,57 +179,64 @@ class RuleManager:
     def _get_top_left(self, x, y):
         lst = list()
 
-        print(x, y, self.board[x][y])
         x -= 1
         y -= 1
-        print(x, y, self.board[x][y])
         while x >= 0 and y >= 0 and not self.board[x][y]:
-            print(x, y, self.board[x][y])
             lst.append((x, y))
             x -= 1
             y -= 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if y >= 0 and x >= 0:
+            if not self.board[x][y] and self.board[x][y].color == self.color:
+                lst.append((x, y))
 
         return lst
 
     def _get_top_right(self, x, y):
         lst = list()
 
-        while (x != 0 or y != 7) and not self.board[x][y]:
-            lst.append((x - 1, y + 1))
+        x -= 1
+        y += 1
+        while x >= 0 and y <= 7 and not self.board[x][y]:
+            lst.append((x, y))
             x -= 1
             y += 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if x >= 0 and y <= 7:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
     def _get_bottom_right(self, x, y):
         lst = list()
 
-        while (x != 7 or y != 7) and not self.board[x][y]:
+        x += 1
+        y += 1
+        while x <= 7 and y <= 7 and not self.board[x][y]:
             lst.append((x + 1, y + 1))
             x += 1
             y += 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if x <= 7 and y <= 7:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
     def _get_bottom_left(self, x, y):
         lst = list()
 
-        while (x != 7 or y != 0) and not self.board[x][y]:
+        x += 1
+        y -= 1
+        while x <= 7 and y >= 0 and not self.board[x][y]:
             lst.append((x + 1, y - 1))
             x += 1
             y -= 1
 
-        if not self.board[x][y] and self.board[x][y].color != self.color:
-            lst.append((x, y))
+        if x <= 7 and y >= 0:
+            if not self.board[x][y] and self.board[x][y].color != self.color:
+                lst.append((x, y))
 
         return lst
 
