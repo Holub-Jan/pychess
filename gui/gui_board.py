@@ -56,7 +56,7 @@ class GuiChessBoard(GuiWidget):
 
     def tile_clicked(self, x, y):
         self.logic.move_piece(x, y)
-        print(f"You clicked on tile {self.axis_x[x]}{self.axis_y[y]}")
+        # print(f"You clicked on tile {self.axis_x[x]}{self.axis_y[y]}")
         self.init_game() # temporary
         
 
